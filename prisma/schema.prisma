@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model Job {
+  id                  Int                  @id @unique @default(autoincrement())
+  status              JobStatus            @default(pending)
+  created_at          DateTime             @default(now())
+  repositoryPull      RepositoryPull?
+  repositoryStatsPull RepositoryStatsPull?
+}
+
+model RepositoryPull {
+  id             Int    @id @unique @default(autoincrement())
+  jobId          Int    @unique
+  job            Job    @relation(fields: [jobId], references: [id])
+  api_url        String
+  token          String
+  current_page   Int    @default(1)
+  page_size      Int    @default(100)
+  organizationId Int
+}
+
+model RepositoryStatsPull {
+  id             Int    @id @unique @default(autoincrement())
+  jobId          Int    @unique
+  job            Job    @relation(fields: [jobId], references: [id])
+  clone_url      String
+  token          String
+  repositoryId   Int
+  organizationId Int
+}
+
+enum JobStatus {
+  complete
+  failed
+  pending
+}
