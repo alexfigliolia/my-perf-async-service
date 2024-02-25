@@ -1,5 +1,6 @@
 import type { GraphQLFieldConfig } from "graphql";
 import { GraphQLInt, GraphQLString } from "graphql";
+import { RequestMethodType } from "Schema/Resolvers/RequestMethod/GQLTypes";
 import type { Context } from "Schema/Utilities";
 import { SchemaBuilder } from "Schema/Utilities";
 import { RepositoryPullController } from "./Controller";
@@ -17,6 +18,9 @@ export const registerRepositoryPull: GraphQLFieldConfig<
     },
     api_url: {
       type: SchemaBuilder.nonNull(GraphQLString),
+    },
+    requestMethod: {
+      type: SchemaBuilder.nonNull(RequestMethodType),
     },
     organizationId: {
       type: SchemaBuilder.nonNull(GraphQLInt),

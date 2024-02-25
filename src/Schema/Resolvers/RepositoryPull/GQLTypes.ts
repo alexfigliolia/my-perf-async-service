@@ -1,6 +1,7 @@
 import { GraphQLInt, GraphQLObjectType, GraphQLString } from "graphql";
 import type { Context } from "Schema/Utilities";
 import { SchemaBuilder } from "Schema/Utilities";
+import { RequestMethodType } from "../RequestMethod/GQLTypes";
 import type { IRepositoryPull } from "./types";
 
 export const RepositoryPullType = new GraphQLObjectType<
@@ -23,6 +24,9 @@ export const RepositoryPullType = new GraphQLObjectType<
     },
     pageSize: {
       type: SchemaBuilder.nonNull(GraphQLInt),
+    },
+    requestMethod: {
+      type: SchemaBuilder.nonNull(RequestMethodType),
     },
     organizationId: {
       type: SchemaBuilder.nonNull(GraphQLInt),

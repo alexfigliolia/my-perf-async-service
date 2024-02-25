@@ -20,14 +20,15 @@ model Job {
 }
 
 model RepositoryPull {
-  id             Int    @id @unique @default(autoincrement())
-  jobId          Int    @unique
-  job            Job    @relation(fields: [jobId], references: [id])
+  id             Int           @id @unique @default(autoincrement())
+  jobId          Int           @unique
+  job            Job           @relation(fields: [jobId], references: [id])
   api_url        String
   token          String
-  current_page   Int    @default(1)
-  page_size      Int    @default(100)
+  current_page   Int           @default(1)
+  page_size      Int           @default(100)
   organizationId Int
+  requestMethod  RequestMethod
 }
 
 model RepositoryStatsPull {
@@ -44,4 +45,9 @@ enum JobStatus {
   complete
   failed
   pending
+}
+
+enum RequestMethod {
+  GET
+  POST
 }
