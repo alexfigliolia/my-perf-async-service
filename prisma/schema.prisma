@@ -25,6 +25,7 @@ model RepositoryPull {
   job            Job           @relation(fields: [jobId], references: [id])
   api_url        String
   token          String
+  platform       Platform
   current_page   Int           @default(1)
   page_size      Int           @default(100)
   organizationId Int
@@ -50,4 +51,9 @@ enum JobStatus {
 enum RequestMethod {
   GET
   POST
+}
+
+enum Platform {
+  github
+  bitbucket
 }

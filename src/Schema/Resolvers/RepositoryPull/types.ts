@@ -1,8 +1,9 @@
-import type { RequestMethod } from "@prisma/client";
+import type { Platform, RequestMethod } from "@prisma/client";
 
 export interface ICreatePull {
-  api_url: string;
   token: string;
+  api_url: string;
+  platform: Platform;
   organizationId: number;
   requestMethod: RequestMethod;
 }
