@@ -7,12 +7,10 @@ export class Environment {
   public static CERTS_PATH = this.accessOrThrow("CERTS_PATH");
   public static AUTH_SECRET = this.accessOrThrow("AUTH_SECRET");
   public static POSTGRES_URL = this.accessOrThrow("POSTGRES_URL");
+  public static CORE_SERVICE_URL = this.accessOrThrow("CORE_SERVICE_URL");
 
   public static get origins(): string[] {
-    if (this.LOCAL) {
-      return ["http://localhost:4000", "http://localhost:4002"];
-    }
-    return [];
+    return [this.CORE_SERVICE_URL];
   }
 
   private static accessOrThrow(key: string) {
