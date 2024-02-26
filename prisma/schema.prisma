@@ -26,8 +26,8 @@ model RepositoryPull {
   api_url        String
   token          String
   platform       Platform
-  current_page   Int           @default(1)
-  page_size      Int           @default(100)
+  currentPage    Int           @default(1)
+  pageSize       Int           @default(100)
   organizationId Int
   requestMethod  RequestMethod
 }

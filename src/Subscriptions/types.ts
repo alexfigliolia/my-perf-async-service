@@ -1,5 +1,5 @@
-import type { Installation } from "@prisma/client";
+import type { RepositoryPull } from "@prisma/client";
 
 export type Channels = {
-  newInstallation: [identifier: string, payload: Installation];
+  repositoryPull: [job: RepositoryPull];
 };

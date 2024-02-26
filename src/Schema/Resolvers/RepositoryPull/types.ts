@@ -13,3 +13,15 @@ export interface IRepositoryPull extends ICreatePull {
   currentPage: number;
   pageSize: number;
 }
+
+export interface IRepositoryPullJob {
+  id: number;
+  jobId: number;
+  api_url: string;
+  token: string;
+  platform: Platform;
+  currentPage: number;
+  pageSize: number;
+  organizationId: number;
+  requestMethod: RequestMethod;
+}

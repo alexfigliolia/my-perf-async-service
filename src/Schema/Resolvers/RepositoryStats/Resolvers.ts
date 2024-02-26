@@ -6,7 +6,7 @@ import { RepositoryStatsController } from "./Controller";
 import type { IRegisterRepoStats } from "./types";
 
 export const registerRepositoryStatsPull: GraphQLFieldConfig<
-  { id: number },
+  number,
   Context,
   IRegisterRepoStats
 > = {
@@ -25,7 +25,8 @@ export const registerRepositoryStatsPull: GraphQLFieldConfig<
       type: SchemaBuilder.nonNull(GraphQLInt),
     },
   },
-  resolve: (_, args) => {
-    return RepositoryStatsController.registerJob(args);
+  resolve: async (_, args) => {
+    const job = await RepositoryStatsController.registerJob(args);
+    return job.id;
   },
 };

@@ -8,8 +8,11 @@ export class Environment {
   public static AUTH_SECRET = this.accessOrThrow("AUTH_SECRET");
   public static POSTGRES_URL = this.accessOrThrow("POSTGRES_URL");
 
-  public static get origin() {
-    return "http://localhost:4000";
+  public static get origins(): string[] {
+    if (this.LOCAL) {
+      return ["http://localhost:4000", "http://localhost:4002"];
+    }
+    return [];
   }
 
   private static accessOrThrow(key: string) {
