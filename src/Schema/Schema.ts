@@ -1,9 +1,11 @@
 import { GraphQLObjectType, GraphQLSchema } from "graphql";
 import {
-  nextPullJob,
+  nextRepositoryPullJob,
+  nextRepositoryStatsPullJob,
   registerRepositoryPull,
   registerRepositoryStatsPull,
   repositoryPulls,
+  repositoryStatsPulls,
   setJobStatus,
 } from "./Resolvers";
 import type { Context } from "./Utilities";
@@ -11,7 +13,8 @@ import type { Context } from "./Utilities";
 const QueryRoot = new GraphQLObjectType<any, Context>({
   name: "Query",
   fields: () => ({
-    nextPullJob,
+    nextRepositoryPullJob,
+    nextRepositoryStatsPullJob,
   }),
 });
 
@@ -28,6 +31,7 @@ const SubscriptionRoot = new GraphQLObjectType<any, Context>({
   name: "Subscription",
   fields: () => ({
     repositoryPulls,
+    repositoryStatsPulls,
   }),
 });
 

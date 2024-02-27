@@ -10,7 +10,7 @@ import { RepositoryPullJobType } from "./GQLTypes";
 import type { ICreatePull, IRepositoryPullJob } from "./types";
 
 export const registerRepositoryPull: GraphQLFieldConfig<
-  number,
+  any,
   Context,
   ICreatePull
 > = {
@@ -42,8 +42,8 @@ export const registerRepositoryPull: GraphQLFieldConfig<
   },
 };
 
-export const nextPullJob: GraphQLFieldConfig<
-  IRepositoryPullJob,
+export const nextRepositoryPullJob: GraphQLFieldConfig<
+  any,
   Context,
   Record<string, never>
 > = {

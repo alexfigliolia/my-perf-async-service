@@ -4,3 +4,11 @@ export interface IRegisterRepoStats {
   repositoryId: number;
   organizationId: number;
 }
+
+export interface IRepoStatsPull extends IRegisterRepoStats {
+  id: number;
+}
+
+export interface IRepoStatsPullJob extends IRepoStatsPull {
+  jobId: number;
+}

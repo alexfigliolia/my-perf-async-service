@@ -1,12 +1,14 @@
 import type { GraphQLFieldConfig } from "graphql";
-import { GraphQLInt, GraphQLString } from "graphql";
+import { GraphQLError, GraphQLInt, GraphQLString } from "graphql";
 import type { Context } from "Schema/Utilities";
 import { SchemaBuilder } from "Schema/Utilities";
+import { Subscriptions } from "Subscriptions";
 import { RepositoryStatsController } from "./Controller";
+import { RepositoryStatsPullJobType } from "./GQLTypes";
 import type { IRegisterRepoStats } from "./types";
 
 export const registerRepositoryStatsPull: GraphQLFieldConfig<
-  number,
+  any,
   Context,
   IRegisterRepoStats
 > = {
@@ -27,6 +29,33 @@ export const registerRepositoryStatsPull: GraphQLFieldConfig<
   },
   resolve: async (_, args) => {
     const job = await RepositoryStatsController.registerJob(args);
+    if (!job.repositoryStatsPull) {
+      throw new GraphQLError("Failed to create repository stats pull");
+    }
+    Subscriptions.publish("repositoryStatsPull", job.repositoryStatsPull);
     return job.id;
   },
+};
+
+export const nextRepositoryStatsPullJob: GraphQLFieldConfig<
+  any,
+  Context,
+  Record<string, never>
+> = {
+  type: SchemaBuilder.nonNull(RepositoryStatsPullJobType),
+  resolve: () => {
+    return RepositoryStatsController.poll();
+  },
+};
+
+export const repositoryStatsPulls: GraphQLFieldConfig<
+  any,
+  Context,
+  Record<string, never>
+> = {
+  type: SchemaBuilder.nonNull(RepositoryStatsPullJobType),
+  subscribe: () => {
+    return Subscriptions.subscribe("repositoryStatsPull");
+  },
+  resolve: job => job,
 };
