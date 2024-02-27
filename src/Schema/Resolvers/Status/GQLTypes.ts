@@ -12,5 +12,8 @@ export const StatusType = new GraphQLEnumType({
     pending: {
       value: "pending",
     },
+    inprogress: {
+      value: "inprogress",
+    },
   },
 });

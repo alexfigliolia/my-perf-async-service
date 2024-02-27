@@ -26,19 +26,28 @@ export class RepositoryPullController {
                 isNot: null,
               },
             },
-            { status: "pending" },
+            {
+              status: {
+                in: ["failed", "pending"],
+              },
+            },
           ],
         },
         orderBy: {
           created_at: "asc",
         },
         select: {
+          id: true,
           repositoryPull: true,
         },
       });
       if (!job.repositoryPull) {
         throw "something";
       }
+      await ORM.job.update({
+        where: { id: job.id },
+        data: { status: "inprogress" },
+      });
       return job.repositoryPull;
     } catch (error) {
       throw new GraphQLError("No repository pull jobs remaining");
