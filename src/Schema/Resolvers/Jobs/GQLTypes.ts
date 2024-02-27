@@ -10,15 +10,19 @@ export const JobType = new GraphQLObjectType<IJob, Context>({
   fields: {
     id: {
       type: SchemaBuilder.nonNull(GraphQLInt),
+      resolve: job => job.id,
     },
     status: {
       type: SchemaBuilder.nonNull(StatusType),
+      resolve: job => job.status,
     },
     created_at: {
       type: SchemaBuilder.nonNull(GraphQLString),
+      resolve: job => job.created_at,
     },
     repositoryPull: {
       type: RepositoryPullType,
+      resolve: job => job.repositoryPull,
     },
   },
 });

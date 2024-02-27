@@ -46,6 +46,7 @@ enum JobStatus {
   complete
   failed
   pending
+  inprogress
 }
 
 enum RequestMethod {

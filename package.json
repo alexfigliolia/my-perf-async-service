@@ -17,7 +17,6 @@
   "scripts": {
     "build": "npx ts-packager -e src/Start.ts",
     "certs": "ts-node devtools/certs-generator/CLI.ts",
-    "generate-types": "ts-node devtools/codegen/CLI.ts",
     "dev": "ts-node devtools/dev-server/CLI.ts",
     "lint": "ts-node ci/commands/Lint.ts",
     "reset-db": "npx prisma migrate reset && npx prisma db push",
@@ -46,8 +45,6 @@
   "devDependencies": {
     "@figliolia/child-process": "^1.0.3",
     "@figliolia/ts-packager": "^1.0.6",
-    "@graphql-codegen/cli": "^5.0.0",
-    "@graphql-codegen/client-preset": "^4.1.0",
     "@swc/core": "^1.3.107",
     "@types/chalk": "^2.2.0",
     "@types/cors": "^2.8.17",

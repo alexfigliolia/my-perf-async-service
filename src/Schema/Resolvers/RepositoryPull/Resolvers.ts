@@ -62,4 +62,5 @@ export const repositoryPulls: GraphQLFieldConfig<
   subscribe: () => {
     return Subscriptions.subscribe("repositoryPull");
   },
+  resolve: job => job,
 };
