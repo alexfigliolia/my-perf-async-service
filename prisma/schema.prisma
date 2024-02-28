@@ -17,7 +17,7 @@ model Job {
   created_at           DateTime              @default(now())
   repositoryPull       RepositoryPull?
   repositoryStatsPull  RepositoryStatsPull?
-  MonthlyUserStatsPull MonthlyUserStatsPull?
+  monthlyUserStatsPull MonthlyUserStatsPull?
 }
 
 model RepositoryPull {

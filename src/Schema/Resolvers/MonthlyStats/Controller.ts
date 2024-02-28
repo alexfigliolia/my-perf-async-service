@@ -6,12 +6,12 @@ export class MonthlyStatsPullController {
   public static registerJob(args: ICreateMonthlyPull) {
     return ORM.job.create({
       data: {
-        MonthlyUserStatsPull: {
+        monthlyUserStatsPull: {
           create: args,
         },
       },
       include: {
-        MonthlyUserStatsPull: true,
+        monthlyUserStatsPull: true,
       },
     });
   }
@@ -22,7 +22,7 @@ export class MonthlyStatsPullController {
         where: {
           AND: [
             {
-              MonthlyUserStatsPull: {
+              monthlyUserStatsPull: {
                 isNot: null,
               },
             },
@@ -38,17 +38,17 @@ export class MonthlyStatsPullController {
         },
         select: {
           id: true,
-          MonthlyUserStatsPull: true,
+          monthlyUserStatsPull: true,
         },
       });
-      if (!job.MonthlyUserStatsPull) {
+      if (!job.monthlyUserStatsPull) {
         throw "something";
       }
       await ORM.job.update({
         where: { id: job.id },
         data: { status: "inprogress" },
       });
-      return job.MonthlyUserStatsPull;
+      return job.monthlyUserStatsPull;
     } catch (error) {
       throw new GraphQLError("No monthly user stats pull jobs remaining");
     }

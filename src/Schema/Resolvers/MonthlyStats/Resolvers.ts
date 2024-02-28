@@ -35,10 +35,10 @@ export const registerMonthlyStatsPull: GraphQLFieldConfig<
   },
   resolve: async (_, args) => {
     const job = await MonthlyStatsPullController.registerJob(args);
-    if (!job.MonthlyUserStatsPull) {
+    if (!job.monthlyUserStatsPull) {
       throw new GraphQLError("Failed to create monthly stats pull");
     }
-    Subscriptions.publish("monthlyUserStatsPull", job.MonthlyUserStatsPull);
+    Subscriptions.publish("monthlyUserStatsPull", job.monthlyUserStatsPull);
     return job.id;
   },
 };
