@@ -13,6 +13,10 @@ export const RepositoryStatsPull = new GraphQLObjectType<
       type: SchemaBuilder.nonNull(GraphQLInt),
       resolve: pull => pull.id,
     },
+    date: {
+      type: GraphQLString,
+      resolve: pull => pull.date,
+    },
     clone_url: {
       type: SchemaBuilder.nonNull(GraphQLString),
       resolve: pull => pull.clone_url,
