@@ -14,6 +14,9 @@ export const registerRepositoryStatsPull: GraphQLFieldConfig<
 > = {
   type: SchemaBuilder.nonNull(GraphQLInt),
   args: {
+    date: {
+      type: GraphQLString,
+    },
     token: {
       type: SchemaBuilder.nonNull(GraphQLString),
     },

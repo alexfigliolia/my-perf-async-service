@@ -12,12 +12,11 @@ datasource db {
 }
 
 model Job {
-  id                   Int                   @id @unique @default(autoincrement())
-  status               JobStatus             @default(pending)
-  created_at           DateTime              @default(now())
-  repositoryPull       RepositoryPull?
-  repositoryStatsPull  RepositoryStatsPull?
-  monthlyUserStatsPull MonthlyUserStatsPull?
+  id                  Int                  @id @unique @default(autoincrement())
+  status              JobStatus            @default(pending)
+  created_at          DateTime             @default(now())
+  repositoryPull      RepositoryPull?
+  repositoryStatsPull RepositoryStatsPull?
 }
 
 model RepositoryPull {
@@ -34,23 +33,14 @@ model RepositoryPull {
 }
 
 model RepositoryStatsPull {
-  id             Int    @id @unique @default(autoincrement())
-  jobId          Int    @unique
-  job            Job    @relation(fields: [jobId], references: [id])
+  id             Int       @id @unique @default(autoincrement())
+  jobId          Int       @unique
+  job            Job       @relation(fields: [jobId], references: [id])
   clone_url      String
   token          String
   repositoryId   Int
   organizationId Int
-}
-
-model MonthlyUserStatsPull {
-  id           Int    @id @unique @default(autoincrement())
-  jobId        Int    @unique
-  job          Job    @relation(fields: [jobId], references: [id])
-  clone_url    String
-  token        String
-  repositoryId Int
-  userId       Int
+  date           DateTime?
 }
 
 enum JobStatus {
