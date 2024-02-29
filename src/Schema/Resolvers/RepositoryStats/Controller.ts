@@ -1,6 +1,6 @@
 import { addDays, addMonths, addWeeks, addYears } from "date-fns";
 import { GraphQLError } from "graphql";
-import { JobStatus, Schedule } from "@prisma/client";
+import { Schedule } from "@prisma/client";
 import { ORM } from "ORM";
 import { JobController } from "Schema/Resolvers/Jobs/Controller";
 import type { IJobStatus } from "Schema/Resolvers/Jobs/types";
@@ -50,20 +50,29 @@ export class RepositoryStatsController {
             },
             {
               OR: [
-                { schedule: Schedule.once },
                 {
-                  repositoryStatsPull: {
-                    date: {
-                      lte: new Date().toISOString(),
+                  AND: [
+                    { schedule: Schedule.once },
+                    { status: { notIn: ["complete", "inprogress"] } },
+                  ],
+                },
+                {
+                  AND: [
+                    {
+                      repositoryStatsPull: {
+                        date: {
+                          lte: new Date().toISOString(),
+                        },
+                      },
                     },
-                  },
+                    {
+                      status: {
+                        not: "inprogress",
+                      },
+                    },
+                  ],
                 },
               ],
-            },
-            {
-              status: {
-                in: ["failed", "pending"],
-              },
             },
           ],
         },
@@ -94,24 +103,22 @@ export class RepositoryStatsController {
       throw new Error("Error updating job: Job not found");
     }
     const { status } = args;
-    if (!job.repositoryStatsPull.date || status === JobStatus.failed) {
+    if (job.schedule === Schedule.once || status !== "complete") {
       return JobController.setStatus(args);
     }
-    if (status === JobStatus.complete) {
-      return ORM.query(
-        ORM.job.update({
-          where: { id: args.id },
-          data: {
-            status: "inprogress",
-            repositoryStatsPull: {
-              update: {
-                date: this.nextCronDate(job.schedule),
-              },
+    return ORM.query(
+      ORM.job.update({
+        where: { id: args.id },
+        data: {
+          status,
+          repositoryStatsPull: {
+            update: {
+              date: this.nextCronDate(job.schedule),
             },
           },
-        }),
-      );
-    }
+        },
+      }),
+    );
   }
 
   public static deleteAll(id: number) {
