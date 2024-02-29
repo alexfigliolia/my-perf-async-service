@@ -10,4 +10,13 @@ export class JobController {
       }),
     );
   }
+
+  public static getStatsPullJob(id: number) {
+    return ORM.query(
+      ORM.job.findUnique({
+        where: { id },
+        include: { repositoryStatsPull: true },
+      }),
+    );
+  }
 }

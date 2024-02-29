@@ -1,4 +1,5 @@
 import { GraphQLError } from "graphql";
+import { Schedule } from "@prisma/client";
 import { ORM } from "ORM";
 import type { ICreatePull } from "./types";
 
@@ -25,6 +26,9 @@ export class RepositoryPullController {
               repositoryPull: {
                 isNot: null,
               },
+            },
+            {
+              schedule: Schedule.once,
             },
             {
               status: {

@@ -15,7 +15,7 @@ export const RepositoryStatsPull = new GraphQLObjectType<
     },
     date: {
       type: GraphQLString,
-      resolve: pull => pull.date,
+      resolve: pull => pull?.date?.toISOString?.() ?? pull.date,
     },
     clone_url: {
       type: SchemaBuilder.nonNull(GraphQLString),

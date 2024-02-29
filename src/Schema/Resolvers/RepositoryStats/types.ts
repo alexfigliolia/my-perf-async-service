@@ -1,5 +1,5 @@
 export interface IRegisterRepoStats {
-  date?: string;
+  date?: Date;
   token: string;
   clone_url: string;
   repositoryId: number;

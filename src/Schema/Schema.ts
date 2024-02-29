@@ -7,6 +7,7 @@ import {
   repositoryPulls,
   repositoryStatsPulls,
   setJobStatus,
+  setRepositoryStatsJobStatus,
 } from "./Resolvers";
 import type { Context } from "./Utilities";
 
@@ -24,6 +25,7 @@ const MutationRoot = new GraphQLObjectType<any, Context>({
     setJobStatus,
     registerRepositoryPull,
     registerRepositoryStatsPull,
+    setRepositoryStatsJobStatus,
   }),
 });
 

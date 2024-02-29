@@ -14,7 +14,8 @@ datasource db {
 model Job {
   id                  Int                  @id @unique @default(autoincrement())
   status              JobStatus            @default(pending)
-  created_at          DateTime             @default(now())
+  created_at          DateTime             @default(now()) @db.Timestamptz()
+  schedule            Schedule             @default(once)
   repositoryPull      RepositoryPull?
   repositoryStatsPull RepositoryStatsPull?
 }
@@ -40,7 +41,7 @@ model RepositoryStatsPull {
   token          String
   repositoryId   Int
   organizationId Int
-  date           DateTime?
+  date           DateTime? @db.Timestamptz()
 }
 
 enum JobStatus {
@@ -58,4 +59,12 @@ enum RequestMethod {
 enum Platform {
   github
   bitbucket
+}
+
+enum Schedule {
+  once
+  daily
+  weekly
+  monthly
+  yearly
 }
