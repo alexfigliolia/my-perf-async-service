@@ -4,39 +4,38 @@ import { JobStatus, Schedule } from "@prisma/client";
 import { ORM } from "ORM";
 import { JobController } from "Schema/Resolvers/Jobs/Controller";
 import type { IJobStatus } from "Schema/Resolvers/Jobs/types";
-import type { IRegisterRepoStats } from "./types";
+import type { IRegisterCronArgs, IRegisterRepoStats } from "./types";
 
 export class RepositoryStatsController {
-  public static async registerJob(args: IRegisterRepoStats) {
+  public static async subscribeToRepositoryStats(args: IRegisterRepoStats) {
     const [job] = await ORM.$transaction([
-      ORM.job.create({
-        data: {
-          repositoryStatsPull: {
-            create: args,
-          },
-        },
-        select: {
-          id: true,
-          repositoryStatsPull: true,
-        },
+      this.registerCron({
+        ...args,
+        date: new Date(),
+        schedule: Schedule.daily,
       }),
-      ORM.job.create({
-        data: {
-          schedule: Schedule.monthly,
-          repositoryStatsPull: {
-            create: {
-              ...args,
-              date: new Date().toISOString(),
-            },
-          },
-        },
-        select: {
-          id: true,
-          repositoryStatsPull: true,
-        },
+      this.registerCron({
+        ...args,
+        date: new Date(),
+        range: Schedule.monthly,
+        schedule: Schedule.monthly,
       }),
     ]);
     return job;
+  }
+
+  public static registerJob(args: IRegisterRepoStats) {
+    return ORM.job.create({
+      data: {
+        repositoryStatsPull: {
+          create: args,
+        },
+      },
+      select: {
+        id: true,
+        repositoryStatsPull: true,
+      },
+    });
   }
 
   public static async poll() {
@@ -100,14 +99,47 @@ export class RepositoryStatsController {
     }
     if (status === JobStatus.complete) {
       return ORM.query(
-        ORM.repositoryStatsPull.update({
-          where: { id: job.repositoryStatsPull.id },
+        ORM.job.update({
+          where: { id: args.id },
           data: {
-            date: this.nextCronDate(job.schedule),
+            status: "inprogress",
+            repositoryStatsPull: {
+              update: {
+                date: this.nextCronDate(job.schedule),
+              },
+            },
           },
         }),
       );
     }
+  }
+
+  public static deleteAll(id: number) {
+    return ORM.query(
+      ORM.job.deleteMany({
+        where: {
+          repositoryStatsPull: {
+            repositoryId: id,
+          },
+        },
+      }),
+    );
+  }
+
+  private static registerCron(args: IRegisterCronArgs) {
+    const { schedule, ...rest } = args;
+    return ORM.job.create({
+      data: {
+        schedule,
+        repositoryStatsPull: {
+          create: rest,
+        },
+      },
+      select: {
+        id: true,
+        repositoryStatsPull: true,
+      },
+    });
   }
 
   private static nextCronDate(schedule: Schedule) {

@@ -23,7 +23,7 @@ model Job {
 model RepositoryPull {
   id             Int           @id @unique @default(autoincrement())
   jobId          Int           @unique
-  job            Job           @relation(fields: [jobId], references: [id])
+  job            Job           @relation(fields: [jobId], references: [id], onDelete: Cascade)
   api_url        String
   token          String
   platform       Platform
@@ -36,9 +36,10 @@ model RepositoryPull {
 model RepositoryStatsPull {
   id             Int       @id @unique @default(autoincrement())
   jobId          Int       @unique
-  job            Job       @relation(fields: [jobId], references: [id])
+  job            Job       @relation(fields: [jobId], references: [id], onDelete: Cascade)
   clone_url      String
   token          String
+  range          Schedule?
   repositoryId   Int
   organizationId Int
   date           DateTime? @db.Timestamptz()

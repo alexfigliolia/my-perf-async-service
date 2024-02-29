@@ -1,4 +1,4 @@
-import type { JobStatus } from "@prisma/client";
+import type { JobStatus, Schedule } from "@prisma/client";
 import type { IRepositoryPull } from "Schema/Resolvers/RepositoryPull/types";
 
 export interface IJobStatus {
@@ -8,5 +8,6 @@ export interface IJobStatus {
 
 export interface IJob extends IJobStatus {
   created_at: string;
+  schedule: Schedule;
   repositoryPull: null | IRepositoryPull;
 }

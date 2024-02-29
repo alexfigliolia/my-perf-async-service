@@ -1,5 +1,6 @@
 import { GraphQLObjectType, GraphQLSchema } from "graphql";
 import {
+  deleteRepositoryStatsJobs,
   nextRepositoryPullJob,
   nextRepositoryStatsPullJob,
   registerRepositoryPull,
@@ -8,6 +9,7 @@ import {
   repositoryStatsPulls,
   setJobStatus,
   setRepositoryStatsJobStatus,
+  subscribeToRepositoryStats,
 } from "./Resolvers";
 import type { Context } from "./Utilities";
 
@@ -26,6 +28,8 @@ const MutationRoot = new GraphQLObjectType<any, Context>({
     registerRepositoryPull,
     registerRepositoryStatsPull,
     setRepositoryStatsJobStatus,
+    subscribeToRepositoryStats,
+    deleteRepositoryStatsJobs,
   }),
 });
 

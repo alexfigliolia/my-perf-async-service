@@ -1,18 +1,34 @@
 import type { GraphQLFieldConfig } from "graphql";
-import {
-  GraphQLBoolean,
-  GraphQLError,
-  GraphQLInt,
-  GraphQLString,
-} from "graphql";
+import { GraphQLBoolean, GraphQLError, GraphQLInt } from "graphql";
 import { JobStatusType } from "Schema/Resolvers/Jobs/GQLTypes";
 import type { IJobStatus } from "Schema/Resolvers/Jobs/types";
 import type { Context } from "Schema/Utilities";
 import { SchemaBuilder } from "Schema/Utilities";
 import { Subscriptions } from "Subscriptions";
 import { RepositoryStatsController } from "./Controller";
-import { RepositoryStatsPullJobType } from "./GQLTypes";
-import type { IRegisterRepoStats } from "./types";
+import {
+  RepositoryStatsJobArguments,
+  RepositoryStatsPullJobType,
+} from "./GQLTypes";
+import type { IRegisterRepoStats, IRepoID, IRepoStatsPullJob } from "./types";
+
+export const subscribeToRepositoryStats: GraphQLFieldConfig<
+  any,
+  Context,
+  IRegisterRepoStats
+> = {
+  type: SchemaBuilder.nonNull(GraphQLInt),
+  args: RepositoryStatsJobArguments,
+  resolve: async (_, args) => {
+    const job =
+      await RepositoryStatsController.subscribeToRepositoryStats(args);
+    if (!job.repositoryStatsPull) {
+      throw new GraphQLError("Failed to create repository stats pull");
+    }
+    Subscriptions.publish("repositoryStatsPull", job.repositoryStatsPull);
+    return job.id;
+  },
+};
 
 export const registerRepositoryStatsPull: GraphQLFieldConfig<
   any,
@@ -20,23 +36,7 @@ export const registerRepositoryStatsPull: GraphQLFieldConfig<
   IRegisterRepoStats
 > = {
   type: SchemaBuilder.nonNull(GraphQLInt),
-  args: {
-    date: {
-      type: GraphQLString,
-    },
-    token: {
-      type: SchemaBuilder.nonNull(GraphQLString),
-    },
-    clone_url: {
-      type: SchemaBuilder.nonNull(GraphQLString),
-    },
-    repositoryId: {
-      type: SchemaBuilder.nonNull(GraphQLInt),
-    },
-    organizationId: {
-      type: SchemaBuilder.nonNull(GraphQLInt),
-    },
-  },
+  args: RepositoryStatsJobArguments,
   resolve: async (_, args) => {
     const job = await RepositoryStatsController.registerJob(args);
     if (!job.repositoryStatsPull) {
@@ -59,7 +59,7 @@ export const nextRepositoryStatsPullJob: GraphQLFieldConfig<
 };
 
 export const repositoryStatsPulls: GraphQLFieldConfig<
-  any,
+  IRepoStatsPullJob,
   Context,
   Record<string, never>
 > = {
@@ -86,6 +86,23 @@ export const setRepositoryStatsJobStatus: GraphQLFieldConfig<
   },
   resolve: async (_, args) => {
     await RepositoryStatsController.setJobStatus(args);
+    return true;
+  },
+};
+
+export const deleteRepositoryStatsJobs: GraphQLFieldConfig<
+  any,
+  Context,
+  IRepoID
+> = {
+  type: SchemaBuilder.nonNull(GraphQLBoolean),
+  args: {
+    repositoryId: {
+      type: SchemaBuilder.nonNull(GraphQLInt),
+    },
+  },
+  resolve: async (_, args) => {
+    await RepositoryStatsController.deleteAll(args.repositoryId);
     return true;
   },
 };

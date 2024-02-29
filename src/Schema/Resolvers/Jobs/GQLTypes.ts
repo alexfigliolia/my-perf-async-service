@@ -27,6 +27,27 @@ export const JobStatusType = new GraphQLEnumType({
   },
 });
 
+export const ScheduleType = new GraphQLEnumType({
+  name: "Schedule",
+  values: {
+    once: {
+      value: "once",
+    },
+    daily: {
+      value: "daily",
+    },
+    weekly: {
+      value: "weekly",
+    },
+    monthly: {
+      value: "monthly",
+    },
+    yearly: {
+      value: "yearly",
+    },
+  },
+});
+
 export const JobType = new GraphQLObjectType<IJob, Context>({
   name: "Job",
   fields: {
@@ -37,6 +58,10 @@ export const JobType = new GraphQLObjectType<IJob, Context>({
     status: {
       type: SchemaBuilder.nonNull(JobStatusType),
       resolve: job => job.status,
+    },
+    schedule: {
+      type: SchemaBuilder.nonNull(ScheduleType),
+      resolve: job => job.schedule,
     },
     created_at: {
       type: SchemaBuilder.nonNull(GraphQLString),
