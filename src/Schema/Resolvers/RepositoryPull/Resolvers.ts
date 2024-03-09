@@ -61,6 +61,11 @@ export const checkRepositoryPullStatus: GraphQLFieldConfig<
   IByOrganization
 > = {
   type: SchemaBuilder.nonNull(JobStatusType),
+  args: {
+    organizationId: {
+      type: SchemaBuilder.nonNull(GraphQLInt),
+    },
+  },
   resolve: (_, args) => {
     return RepositoryPullController.statusCheck(args.organizationId);
   },
