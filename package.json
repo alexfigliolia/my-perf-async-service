@@ -27,6 +27,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@alexfigliolia/my-performance-gql-errors": "^1.0.0",
     "@prisma/client": "^5.9.1",
     "body-parser": "^1.20.2",
     "chalk": "^4",

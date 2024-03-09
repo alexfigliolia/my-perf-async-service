@@ -1,5 +1,6 @@
 import { GraphQLObjectType, GraphQLSchema } from "graphql";
 import {
+  checkRepositoryPullStatus,
   deleteRepositoryStatsJobs,
   nextRepositoryPullJob,
   nextRepositoryStatsPullJob,
@@ -18,6 +19,7 @@ const QueryRoot = new GraphQLObjectType<any, Context>({
   fields: () => ({
     nextRepositoryPullJob,
     nextRepositoryStatsPullJob,
+    checkRepositoryPullStatus,
   }),
 });
 

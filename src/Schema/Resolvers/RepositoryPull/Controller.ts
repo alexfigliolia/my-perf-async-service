@@ -1,4 +1,5 @@
 import { GraphQLError } from "graphql";
+import { Errors } from "@alexfigliolia/my-performance-gql-errors";
 import { Schedule } from "@prisma/client";
 import { ORM } from "ORM";
 import type { ICreatePull } from "./types";
@@ -56,5 +57,24 @@ export class RepositoryPullController {
     } catch (error) {
       throw new GraphQLError("No repository pull jobs remaining");
     }
+  }
+
+  public static async statusCheck(organizationId: number) {
+    const job = await ORM.query(
+      ORM.job.findFirst({
+        where: {
+          repositoryPull: {
+            organizationId,
+          },
+        },
+        select: {
+          status: true,
+        },
+      }),
+    );
+    if (!job) {
+      throw Errors.createError("NOT_FOUND", "Repository Pull job not found");
+    }
+    return job.status;
   }
 }

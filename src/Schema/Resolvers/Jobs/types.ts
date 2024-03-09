@@ -11,3 +11,7 @@ export interface IJob extends IJobStatus {
   schedule: Schedule;
   repositoryPull: null | IRepositoryPull;
 }
+
+export interface IByOrganization {
+  organizationId: number;
+}

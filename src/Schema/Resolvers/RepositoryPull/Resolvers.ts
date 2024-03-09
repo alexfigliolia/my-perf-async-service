@@ -1,5 +1,7 @@
 import type { GraphQLFieldConfig } from "graphql";
 import { GraphQLError, GraphQLInt, GraphQLString } from "graphql";
+import { JobStatusType } from "Schema/Resolvers/Jobs/GQLTypes";
+import type { IByOrganization } from "Schema/Resolvers/Jobs/types";
 import { PlatformType } from "Schema/Resolvers/Platform/GQLTypes";
 import { RequestMethodType } from "Schema/Resolvers/RequestMethod/GQLTypes";
 import type { Context } from "Schema/Utilities";
@@ -50,6 +52,17 @@ export const nextRepositoryPullJob: GraphQLFieldConfig<
   type: SchemaBuilder.nonNull(RepositoryPullJobType),
   resolve: () => {
     return RepositoryPullController.poll();
+  },
+};
+
+export const checkRepositoryPullStatus: GraphQLFieldConfig<
+  any,
+  Context,
+  IByOrganization
+> = {
+  type: SchemaBuilder.nonNull(JobStatusType),
+  resolve: (_, args) => {
+    return RepositoryPullController.statusCheck(args.organizationId);
   },
 };
 
