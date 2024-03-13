@@ -17,16 +17,20 @@ export const subscribeToRepositoryStats: GraphQLFieldConfig<
   Context,
   IRegisterRepoStats
 > = {
-  type: SchemaBuilder.nonNull(GraphQLInt),
+  type: SchemaBuilder.nonNull(GraphQLBoolean),
   args: RepositoryStatsJobArguments,
   resolve: async (_, args) => {
-    const job =
+    let success = true;
+    const jobs =
       await RepositoryStatsController.subscribeToRepositoryStats(args);
-    if (!job.repositoryStatsPull) {
-      throw new GraphQLError("Failed to create repository stats pull");
+    for (const job of jobs) {
+      if (job.repositoryStatsPull) {
+        Subscriptions.publish("repositoryStatsPull", job.repositoryStatsPull);
+      } else if (success) {
+        success = false;
+      }
     }
-    Subscriptions.publish("repositoryStatsPull", job.repositoryStatsPull);
-    return job.id;
+    return success;
   },
 };
 
@@ -67,7 +71,9 @@ export const repositoryStatsPulls: GraphQLFieldConfig<
   subscribe: () => {
     return Subscriptions.subscribe("repositoryStatsPull");
   },
-  resolve: job => job,
+  resolve: () => {
+    return RepositoryStatsController.poll();
+  },
 };
 
 export const setRepositoryStatsJobStatus: GraphQLFieldConfig<

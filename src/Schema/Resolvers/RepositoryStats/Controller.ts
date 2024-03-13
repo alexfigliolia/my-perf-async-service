@@ -8,7 +8,7 @@ import type { IRegisterCronArgs, IRegisterRepoStats } from "./types";
 
 export class RepositoryStatsController {
   public static async subscribeToRepositoryStats(args: IRegisterRepoStats) {
-    const [job] = await ORM.$transaction([
+    return Promise.all([
       this.registerCron({
         ...args,
         date: new Date(),
@@ -21,7 +21,6 @@ export class RepositoryStatsController {
         schedule: Schedule.monthly,
       }),
     ]);
-    return job;
   }
 
   public static registerJob(args: IRegisterRepoStats) {
@@ -133,8 +132,27 @@ export class RepositoryStatsController {
     );
   }
 
-  private static registerCron(args: IRegisterCronArgs) {
+  private static async registerCron(args: IRegisterCronArgs) {
     const { schedule, ...rest } = args;
+    const job = await ORM.job.findFirst({
+      where: {
+        AND: [
+          { schedule },
+          {
+            repositoryStatsPull: {
+              repositoryId: rest.repositoryId,
+            },
+          },
+        ],
+      },
+      select: {
+        id: true,
+        repositoryStatsPull: true,
+      },
+    });
+    if (job) {
+      return job;
+    }
     return ORM.job.create({
       data: {
         schedule,
