@@ -15,3 +15,11 @@ export interface IJob extends IJobStatus {
 export interface IByOrganization {
   organizationId: number;
 }
+
+export interface BaseCloneJob {
+  id: number;
+  clone_url: string;
+  token: string;
+  repositoryId: number;
+  organizationId: number;
+}
