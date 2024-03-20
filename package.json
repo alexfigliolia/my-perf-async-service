@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "@figliolia/child-process": "^1.0.3",
-    "@figliolia/ts-packager": "^1.0.6",
+    "@figliolia/ts-packager": "^1.0.8",
     "@figliolia/typescript-dev-server": "^1.0.4",
     "@swc/core": "^1.3.107",
     "@types/chalk": "^2.2.0",
@@ -66,8 +66,6 @@
     "pm2": "^5.3.1",
     "prettier": "^3.2.5",
     "ts-jest": "^29.1.2",
-    "tsc-alias": "^1.8.8",
-    "tsconfig-paths": "^4.2.0",
     "tsx": "^4.7.1"
   },
   "resolutions": {
